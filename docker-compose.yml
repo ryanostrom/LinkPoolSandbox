@@ -1,0 +1,46 @@
+version: "3.4"
+
+services:
+  api:
+    build:
+      context: .
+      target: api
+    image: linkpool-sandbox/api
+    command: yarn run dev
+    container_name: linkpool-sandbox-api
+    depends_on:
+      - db
+      - mail
+      - store
+    environment:
+      NODE_ENV: development
+      APP_PORT: 5000
+      APP_STORE__URL: redis://store:6379
+      APP_SECRET_KEY: xyqiw81k2502hfbb
+      DB_HOSTNAME: db
+      DB_DATABASE: linkpool-sandbox
+      DB_USERNAME: linkpool-sandbox
+      DB_PASSWORD: ""
+      MAIL_MAILHOG_HOST: mail
+      TWILIO_ACCOUNT: "AC_TEST"
+      TWILIO_TOKEN: "TEST"
+      TWILIO_SERVICE: "test"
+      TWILIO_FROM_NUMBER: "+15555555555"
+      SENDGRID_API_KEY: ""
+    ports:
+      - "5000:5000"
+    restart: unless-stopped
+    volumes:
+      - ./packages/api/src:/app/packages/api/src
+
+  db:
+    image: postgres:12
+    restart: always
+    container_name: linkpool-sandbox-db
+    environment:
+      POSTGRES_DB: linkpool-sandbox
+      POSTGRES_USER: linkpool-sandbox
+      POSTGRES_PASSWORD: ""
+      POSTGRES_HOST_AUTH_METHOD: trust
+    ports:
+      - "5432:5432"

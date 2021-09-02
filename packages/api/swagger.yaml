@@ -1,0 +1,50 @@
+tags:
+- name: contracts
+  description: contracts API
+
+paths:
+  /contracts/feed:
+    post:
+      tags:
+      - contracts
+      summary: Create contract
+      parameters:
+      - name: body
+        in: body
+        description: contract Data
+        required: true
+        schema:
+          $ref: '#/definitions/contractFeed'
+      responses:
+        201:
+          description: 'OK'
+        400:
+          description: 'Bad Request'
+        409:
+          description: 'Conflict'
+        500:
+          description: 'Server Error'
+
+definitions:
+  contractFeed:
+    type: object
+    required:
+        - nodeAddress
+        - type
+    properties:
+      nodeAddress:
+        type: string
+        description: contract creator nodeAddress
+      type:
+        type: string
+        description: contract feed type
+      address:
+        type: string
+        description: contract Address
+      price:
+        type: number
+        description: contract Price
+
+schemes:
+ - https
+ - http
